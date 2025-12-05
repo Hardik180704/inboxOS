@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useAuth } from "@/components/providers/auth-provider"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
+import { useSearchParams } from "next/navigation"
 import { Loader2, RefreshCw, Mail, Calendar } from "lucide-react"
 import { toast } from "sonner"
 import { formatDistanceToNow } from "date-fns"
@@ -25,7 +26,9 @@ interface DashboardStats {
   recentEmails: any[]
 }
 
-export default function DashboardPage() {
+import { Suspense } from "react"
+
+function DashboardPageContent() {
   const { user } = useAuth()
   const queryClient = useQueryClient()
   const [selectedEmailId, setSelectedEmailId] = useState<string | null>(null)
@@ -41,10 +44,16 @@ export default function DashboardPage() {
     enabled: !!selectedEmailId,
   })
 
+  const searchParams = useSearchParams()
+  const inboxId = searchParams.get('inboxId')
+
   const { data: stats, isLoading } = useQuery<DashboardStats>({
-    queryKey: ['dashboard-stats'],
+    queryKey: ['dashboard-stats', inboxId],
     queryFn: async () => {
-      const res = await fetch('/api/stats')
+      const params = new URLSearchParams()
+      if (inboxId) params.set('accountId', inboxId)
+      
+      const res = await fetch(`/api/stats?${params.toString()}`)
       if (!res.ok) throw new Error('Failed to fetch stats')
       return res.json()
     },
@@ -201,5 +210,17 @@ export default function DashboardPage() {
         </DialogContent>
       </Dialog>
     </div>
+  )
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex h-[50vh] items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      </div>
+    }>
+      <DashboardPageContent />
+    </Suspense>
   )
 }

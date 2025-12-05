@@ -1,0 +1,150 @@
+{
+  "timestamp": "2025-12-05T14:06:06.712Z",
+  "hasCode": true,
+  "action": "connect",
+  "hasSession": true,
+  "hasUser": true,
+  "userId": "fac06208-2dda-4943-b626-98f4715a0908"
+}
+{
+  "timestamp": "2025-12-05T14:08:04.194Z",
+  "hasCode": true,
+  "action": "connect",
+  "hasSession": true,
+  "hasUser": true,
+  "userId": "fac06208-2dda-4943-b626-98f4715a0908"
+}
+Connect error: {"__isAuthError":true,"name":"AuthApiError","status":400,"code":"validation_failed"}
+{
+  "timestamp": "2025-12-05T14:10:05.237Z",
+  "hasCode": true,
+  "action": "connect",
+  "hasSession": true,
+  "hasUser": true,
+  "userId": "fac06208-2dda-4943-b626-98f4715a0908"
+}
+Connect success. Email: hardy2004as@gmail.com
+[saveTokens] Processing hardy2004as@gmail.com for targetUser fac06208-2dda-4943-b626-98f4715a0908. Provider: google
+[saveTokens] User plan: PRO, Limit: 3
+[saveTokens] Current account count: 1
+[saveTokens] Inserting new account
+{
+  "timestamp": "2025-12-05T14:38:23.124Z",
+  "hasCode": true,
+  "action": "connect",
+  "hasSession": true,
+  "hasUser": true,
+  "userId": "fac06208-2dda-4943-b626-98f4715a0908"
+}
+Connect success. Email: 08317711923_ds@vipstc.edu.in
+[saveTokens] Processing 08317711923_ds@vipstc.edu.in for targetUser fac06208-2dda-4943-b626-98f4715a0908. Provider: google
+[saveTokens] User plan: PRO, Limit: 3
+[saveTokens] Current account count: 2
+[saveTokens] Inserting new account
+{
+  "timestamp": "2025-12-05T14:44:11.628Z",
+  "hasCode": true,
+  "action": "connect",
+  "hasSession": true,
+  "hasUser": true,
+  "userId": "fac06208-2dda-4943-b626-98f4715a0908"
+}
+Connect success. Email: hardy2004as@gmail.com
+[saveTokens] Processing hardy2004as@gmail.com for targetUser fac06208-2dda-4943-b626-98f4715a0908. Provider: google
+[saveTokens] User plan: PRO, Limit: 3
+[saveTokens] Current account count: 2
+[saveTokens] Updating existing account e65a7b3f-ac47-4466-8c22-c8b76761206a
+{
+  "timestamp": "2025-12-05T14:53:10.305Z",
+  "hasCode": true,
+  "action": "connect",
+  "hasSession": true,
+  "hasUser": true,
+  "userId": "fac06208-2dda-4943-b626-98f4715a0908"
+}
+Connect success. Email: hardy2004as@gmail.com
+[saveTokens] Processing hardy2004as@gmail.com for targetUser fac06208-2dda-4943-b626-98f4715a0908. Provider: google
+[saveTokens] User plan: PRO, Limit: 3
+[saveTokens] Current account count: 1
+[saveTokens] Inserting new account
+{
+  "timestamp": "2025-12-05T14:54:31.008Z",
+  "hasCode": true,
+  "action": "connect",
+  "hasSession": true,
+  "hasUser": true,
+  "userId": "fac06208-2dda-4943-b626-98f4715a0908"
+}
+Connect success. Email: 08317711923_ds@vipstc.edu.in
+[saveTokens] Processing 08317711923_ds@vipstc.edu.in for targetUser fac06208-2dda-4943-b626-98f4715a0908. Provider: google
+[saveTokens] User plan: PRO, Limit: 3
+[saveTokens] Current account count: 2
+[saveTokens] Inserting new account
+{
+  "timestamp": "2025-12-05T17:05:42.952Z",
+  "hasCode": true,
+  "action": null,
+  "hasSession": false,
+  "hasUser": false
+}
+[saveTokens] Processing hardik2004s@gmail.com for targetUser fac06208-2dda-4943-b626-98f4715a0908. Provider: google
+[saveTokens] User plan: PRO, Limit: 3
+[saveTokens] Current account count: 3
+[saveTokens] Updating existing account 87a04be1-9968-46f3-805c-7d6e703da396
+{
+  "timestamp": "2025-12-05T17:53:23.157Z",
+  "hasCode": true,
+  "action": null,
+  "hasSession": true,
+  "hasUser": true,
+  "userId": "fac06208-2dda-4943-b626-98f4715a0908"
+}
+[saveTokens] Processing hardy2004as@gmail.com for targetUser 11325773-4e8d-49db-a276-0c2b703ccb3b. Provider: google
+[saveTokens] User plan: FREE, Limit: 1
+[saveTokens] Current account count: 1
+[saveTokens] Updating existing account cbc75dee-3841-4c05-934f-87ddee82df1a
+{
+  "timestamp": "2025-12-05T17:54:15.219Z",
+  "hasCode": true,
+  "action": null,
+  "hasSession": false,
+  "hasUser": false
+}
+[saveTokens] Processing hardik2004s@gmail.com for targetUser fac06208-2dda-4943-b626-98f4715a0908. Provider: google
+[saveTokens] User plan: PRO, Limit: 3
+[saveTokens] Current account count: 3
+[saveTokens] Updating existing account 87a04be1-9968-46f3-805c-7d6e703da396
+{
+  "timestamp": "2025-12-05T18:33:53.988Z",
+  "hasCode": true,
+  "action": null,
+  "hasSession": false,
+  "hasUser": false
+}
+[saveTokens] Processing hardik2004s@gmail.com for targetUser fac06208-2dda-4943-b626-98f4715a0908. Provider: google
+[saveTokens] User plan: PRO, Limit: 3
+[saveTokens] Current account count: 3
+[saveTokens] Updating existing account 87a04be1-9968-46f3-805c-7d6e703da396
+{
+  "timestamp": "2025-12-05T18:44:29.238Z",
+  "hasCode": true,
+  "action": null,
+  "hasSession": false,
+  "hasUser": false
+}
+[saveTokens] Processing hardik2004s@gmail.com for targetUser fac06208-2dda-4943-b626-98f4715a0908. Provider: google
+[saveTokens] User plan: PRO, Limit: 3
+[saveTokens] Current account count: 3
+[saveTokens] Updating existing account 87a04be1-9968-46f3-805c-7d6e703da396
+{
+  "timestamp": "2025-12-05T19:08:07.969Z",
+  "hasCode": true,
+  "action": null,
+  "hasSession": true,
+  "hasUser": true,
+  "userId": "fac06208-2dda-4943-b626-98f4715a0908"
+}
+[saveTokens] Processing hardik2004s@gmail.com for targetUser fac06208-2dda-4943-b626-98f4715a0908. Provider: google
+[saveTokens] User plan: PRO, Limit: 3
+[saveTokens] Current account count: 3
+[saveTokens] Updating existing account 87a04be1-9968-46f3-805c-7d6e703da396

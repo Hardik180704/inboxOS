@@ -7,9 +7,33 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
+import { AccountList } from "@/components/dashboard/account-list"
 
-export default function AccountPage() {
+import { useSearchParams, useRouter } from "next/navigation"
+import { useEffect } from "react"
+import { toast } from "sonner"
+
+import { Suspense } from "react"
+
+function AccountPageContent() {
   const { user } = useAuth()
+  const searchParams = useSearchParams()
+  const router = useRouter()
+
+  useEffect(() => {
+    const connected = searchParams.get('connected')
+    if (connected === 'true') {
+      toast.success("Inbox connected successfully")
+      // Clear param
+      router.replace('/dashboard/account')
+    } else if (connected === 'error') {
+      toast.error("Failed to connect inbox")
+      router.replace('/dashboard/account')
+    } else if (connected === 'limit_reached') {
+      toast.error("Plan limit reached. Upgrade to add more inboxes.")
+      router.replace('/dashboard/account')
+    }
+  }, [searchParams, router])
 
   const userInitials = user?.user_metadata?.full_name
     ? user.user_metadata.full_name.split(' ').map((n: string) => n[0]).join('').substring(0, 2).toUpperCase()
@@ -73,6 +97,8 @@ export default function AccountPage() {
         </CardContent>
       </Card>
 
+      <AccountList />
+
       <Card className="border-red-200 dark:border-red-900">
         <CardHeader>
           <CardTitle className="text-red-600 dark:text-red-400">Danger Zone</CardTitle>
@@ -93,5 +119,13 @@ export default function AccountPage() {
         </CardContent>
       </Card>
     </div>
+  )
+}
+
+export default function AccountPage() {
+  return (
+    <Suspense fallback={<div>Loading account settings...</div>}>
+      <AccountPageContent />
+    </Suspense>
   )
 }

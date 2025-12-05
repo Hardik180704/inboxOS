@@ -45,3 +45,11 @@ next-env.d.ts
 # supabase
 supabase/functions/**/.env
 
+
+# scripts
+scripts/*.sql
+
+# logs
+*.log
+sync_debug.log
+callback_debug.log

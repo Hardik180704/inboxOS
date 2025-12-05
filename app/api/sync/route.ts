@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { SyncEngine } from '@/core/engine/sync';
 
-export async function POST(_request: Request) {
+export async function POST(request: Request) {
   try {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
@@ -11,11 +11,25 @@ export async function POST(_request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Fetch all email accounts for the user
-    const { data: accounts, error: accountsError } = await supabase
+    let accountId: string | undefined;
+    try {
+      const body = await request.json();
+      accountId = body.accountId;
+    } catch {
+      // Body might be empty
+    }
+
+    let query = supabase
       .from('email_accounts')
       .select('*')
       .eq('user_id', user.id);
+
+    if (accountId) {
+      query = query.eq('id', accountId);
+    }
+
+    // Fetch email accounts
+    const { data: accounts, error: accountsError } = await query;
 
     if (accountsError) {
       console.error('Error fetching accounts:', accountsError);
