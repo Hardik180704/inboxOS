@@ -37,12 +37,14 @@ export class SyncEngine {
       throw new Error('Provider not supported');
     }
 
+    const limit = user?.plan === 'FREE' ? 500 : 1000;
     await provider.connect();
-    const emails = await provider.listEmails({ limit: 50 });
+    const emails = await provider.listEmails({ limit });
 
-    // Save to DB
-    for (const email of emails) {
-      await supabase.from('emails').upsert({
+    // Save to DB in batches
+    const BATCH_SIZE = 100;
+    for (let i = 0; i < emails.length; i += BATCH_SIZE) {
+      const batch = emails.slice(i, i + BATCH_SIZE).map(email => ({
         account_id: accountId,
         user_id: account.user_id,
         remote_id: email.id,
@@ -52,7 +54,15 @@ export class SyncEngine {
         sender_address: email.sender.address,
         received_at: email.date.toISOString(),
         // TODO: Classification
-      }, { onConflict: 'account_id, remote_id' });
+      }));
+
+      const { error } = await supabase.from('emails').upsert(batch, { 
+        onConflict: 'account_id, remote_id' 
+      });
+
+      if (error) {
+        console.error('Error saving batch:', error);
+      }
     }
   }
 }

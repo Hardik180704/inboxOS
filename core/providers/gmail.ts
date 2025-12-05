@@ -36,27 +36,42 @@ export class GmailProvider implements EmailProvider {
 
     // Batch fetch details
     // Note: In production, use batch API or parallel requests with limit
-    for (const msg of messages) {
-      if (!msg.id) continue;
-      const detail = await this.gmail.users.messages.get({
-        userId: 'me',
-        id: msg.id,
-        format: 'metadata',
-        metadataHeaders: ['Subject', 'From', 'Date', 'List-Unsubscribe'],
+    // Batch fetch details in parallel
+    const BATCH_SIZE = 10; // Process 10 emails at a time to respect rate limits
+    for (let i = 0; i < messages.length; i += BATCH_SIZE) {
+      const chunk = messages.slice(i, i + BATCH_SIZE);
+      const promises = chunk.map(async (msg: any) => {
+        if (!msg.id) return null;
+        try {
+          const detail = await this.gmail.users.messages.get({
+            userId: 'me',
+            id: msg.id,
+            format: 'metadata',
+            metadataHeaders: ['Subject', 'From', 'Date', 'List-Unsubscribe'],
+          });
+
+          const headers: Record<string, string> = {};
+          detail.data.payload?.headers?.forEach((h: { name: string; value: string }) => {
+            headers[h.name] = h.value;
+          });
+
+          return {
+            id: msg.id,
+            subject: headers['Subject'] || '(No Subject)',
+            snippet: detail.data.snippet || '',
+            sender: this.parseSender(headers['From'] || ''),
+            date: new Date(headers['Date'] || Date.now()),
+            headers: headers,
+          };
+        } catch (error) {
+          console.error(`Failed to fetch email ${msg.id}:`, error);
+          return null;
+        }
       });
 
-      const headers: Record<string, string> = {};
-      detail.data.payload?.headers?.forEach((h: { name: string; value: string }) => {
-        headers[h.name] = h.value;
-      });
-
-      emails.push({
-        id: msg.id,
-        subject: headers['Subject'] || '(No Subject)',
-        snippet: detail.data.snippet || '',
-        sender: this.parseSender(headers['From'] || ''),
-        date: new Date(headers['Date'] || Date.now()),
-        headers: headers,
+      const results = await Promise.all(promises);
+      results.forEach((email) => {
+        if (email) emails.push(email);
       });
     }
 
