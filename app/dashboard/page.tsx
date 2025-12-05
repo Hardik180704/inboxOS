@@ -26,7 +26,9 @@ interface DashboardStats {
   recentEmails: any[]
 }
 
-export default function DashboardPage() {
+import { Suspense } from "react"
+
+function DashboardPageContent() {
   const { user } = useAuth()
   const queryClient = useQueryClient()
   const [selectedEmailId, setSelectedEmailId] = useState<string | null>(null)
@@ -208,5 +210,17 @@ export default function DashboardPage() {
         </DialogContent>
       </Dialog>
     </div>
+  )
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex h-[50vh] items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      </div>
+    }>
+      <DashboardPageContent />
+    </Suspense>
   )
 }

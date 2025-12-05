@@ -18,6 +18,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "InboxOS",
   description: "Multi-Email-Provider Inbox Cleaner",
+  icons: {
+    icon: "/logo.png",
+  },
 };
 
 export default function RootLayout({

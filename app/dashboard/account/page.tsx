@@ -13,7 +13,9 @@ import { useSearchParams, useRouter } from "next/navigation"
 import { useEffect } from "react"
 import { toast } from "sonner"
 
-export default function AccountPage() {
+import { Suspense } from "react"
+
+function AccountPageContent() {
   const { user } = useAuth()
   const searchParams = useSearchParams()
   const router = useRouter()
@@ -117,5 +119,13 @@ export default function AccountPage() {
         </CardContent>
       </Card>
     </div>
+  )
+}
+
+export default function AccountPage() {
+  return (
+    <Suspense fallback={<div>Loading account settings...</div>}>
+      <AccountPageContent />
+    </Suspense>
   )
 }

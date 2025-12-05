@@ -51,7 +51,7 @@ export async function GET(request: Request) {
               getAll() {
                 return cookieStore.getAll()
               },
-              setAll(cookiesToSet) {
+              setAll(_cookiesToSet) {
                 // Intentionally do nothing to preserve the existing session
                 // The new tokens will be returned in the data object, which we'll save manually
               },

@@ -49,7 +49,7 @@ async function debugGmail() {
   console.log('Connected to Gmail. Fetching 1 email...');
   
   // Fetch just 1 email to inspect
-  const emails = await provider.listEmails({ limit: 1 });
+  const { emails } = await provider.listEmails({ limit: 1 });
 
   if (emails.length === 0) {
     console.log('No emails found.');

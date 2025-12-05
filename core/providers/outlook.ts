@@ -1,5 +1,5 @@
 import { Client } from '@microsoft/microsoft-graph-client';
-import { EmailProvider, Email, FetchOptions } from './types';
+import { EmailProvider, FetchOptions, SyncResult } from './types';
 
 export class OutlookProvider implements EmailProvider {
   private client: Client | null = null;
@@ -17,20 +17,37 @@ export class OutlookProvider implements EmailProvider {
     });
   }
 
-  async listEmails(options: FetchOptions = {}): Promise<Email[]> {
+  async listEmails(options: FetchOptions = {}): Promise<SyncResult> {
     if (!this.client) throw new Error('Client not connected');
 
     const limit = options.limit || 50;
-    // Select fields to minimize payload
-    const response = await this.client.api('/me/messages')
-      .top(limit)
-      .select('id,subject,bodyPreview,sender,receivedDateTime,internetMessageHeaders,body')
-      .orderby('receivedDateTime DESC')
-      .get();
+    let requestUrl = '/me/messages/delta';
+    
+    // If we have a delta token (which is a full URL), use it
+    if (options.deltaToken) {
+      requestUrl = options.deltaToken;
+    }
 
+    let request = this.client.api(requestUrl);
+
+    // Only apply query params if we are NOT using a pre-built delta link
+    if (!options.deltaToken) {
+      request = request
+        .top(limit)
+        .select('id,subject,bodyPreview,sender,receivedDateTime,internetMessageHeaders,body')
+        .orderby('receivedDateTime DESC');
+    }
+
+    const response = await request.get();
     const messages = response.value || [];
 
-    return messages.map((msg: any) => ({
+    // Get the next link (for pagination) or delta link (for next sync)
+    // Microsoft Graph returns '@odata.nextLink' for more pages in current sync
+    // and '@odata.deltaLink' when current sync is done.
+    // We can store either as our "deltaToken" for the next run.
+    const nextDeltaToken = response['@odata.deltaLink'] || response['@odata.nextLink'];
+
+    const emails = messages.map((msg: any) => ({
       id: msg.id,
       subject: msg.subject || '(No Subject)',
       snippet: msg.bodyPreview || '',
@@ -43,6 +60,8 @@ export class OutlookProvider implements EmailProvider {
       body: msg.body?.content || '', // Outlook returns body in 'content' field
       bodyHtml: msg.body?.contentType === 'html' ? msg.body.content : '',
     }));
+
+    return { emails, nextDeltaToken };
   }
 
   private parseHeaders(headers: any[]): Record<string, string> {

@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { ChevronsUpDown, Plus, Inbox } from "lucide-react"
+import { ChevronsUpDown, Inbox } from "lucide-react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useQuery } from "@tanstack/react-query"
 
@@ -22,7 +22,9 @@ import {
 } from "@/components/ui/sidebar"
 import { AddAccountDialog } from "./add-account-dialog"
 
-export function InboxSwitcher() {
+import { Suspense } from "react"
+
+function InboxSwitcherContent() {
   const { isMobile } = useSidebar()
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -132,5 +134,13 @@ export function InboxSwitcher() {
         </DropdownMenu>
       </SidebarMenuItem>
     </SidebarMenu>
+  )
+}
+
+export function InboxSwitcher() {
+  return (
+    <Suspense fallback={<div className="h-12 w-full animate-pulse rounded-lg bg-sidebar-accent/50" />}>
+      <InboxSwitcherContent />
+    </Suspense>
   )
 }
