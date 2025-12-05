@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { ModeToggle } from "@/components/ui/mode-toggle";
 import { Menu } from "lucide-react";
 import {
   Sheet,
@@ -40,6 +41,7 @@ export function Navbar() {
         </nav>
 
         <div className="hidden md:flex items-center gap-4">
+          <ModeToggle />
           <Link href="/login">
             <Button variant="ghost" className="text-sm font-medium">
               Log in
@@ -75,6 +77,10 @@ export function Navbar() {
                 FAQ
               </Link>
               <div className="flex flex-col gap-2 mt-4">
+                <div className="flex items-center justify-between px-2 py-2">
+                  <span className="text-sm font-medium">Theme</span>
+                  <ModeToggle />
+                </div>
                 <Link href="/login" onClick={() => setIsOpen(false)}>
                   <Button variant="outline" className="w-full">Log in</Button>
                 </Link>

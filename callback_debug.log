@@ -114,3 +114,37 @@ Connect success. Email: 08317711923_ds@vipstc.edu.in
 [saveTokens] User plan: PRO, Limit: 3
 [saveTokens] Current account count: 3
 [saveTokens] Updating existing account 87a04be1-9968-46f3-805c-7d6e703da396
+{
+  "timestamp": "2025-12-05T18:33:53.988Z",
+  "hasCode": true,
+  "action": null,
+  "hasSession": false,
+  "hasUser": false
+}
+[saveTokens] Processing hardik2004s@gmail.com for targetUser fac06208-2dda-4943-b626-98f4715a0908. Provider: google
+[saveTokens] User plan: PRO, Limit: 3
+[saveTokens] Current account count: 3
+[saveTokens] Updating existing account 87a04be1-9968-46f3-805c-7d6e703da396
+{
+  "timestamp": "2025-12-05T18:44:29.238Z",
+  "hasCode": true,
+  "action": null,
+  "hasSession": false,
+  "hasUser": false
+}
+[saveTokens] Processing hardik2004s@gmail.com for targetUser fac06208-2dda-4943-b626-98f4715a0908. Provider: google
+[saveTokens] User plan: PRO, Limit: 3
+[saveTokens] Current account count: 3
+[saveTokens] Updating existing account 87a04be1-9968-46f3-805c-7d6e703da396
+{
+  "timestamp": "2025-12-05T19:08:07.969Z",
+  "hasCode": true,
+  "action": null,
+  "hasSession": true,
+  "hasUser": true,
+  "userId": "fac06208-2dda-4943-b626-98f4715a0908"
+}
+[saveTokens] Processing hardik2004s@gmail.com for targetUser fac06208-2dda-4943-b626-98f4715a0908. Provider: google
+[saveTokens] User plan: PRO, Limit: 3
+[saveTokens] Current account count: 3
+[saveTokens] Updating existing account 87a04be1-9968-46f3-805c-7d6e703da396

@@ -42,15 +42,19 @@ import { useRouter } from "next/navigation"
 import { useAuth } from "@/components/providers/auth-provider"
 import { InboxSwitcher } from "@/components/dashboard/inbox-switcher"
 
+import { Badge } from "@/components/ui/badge"
+
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const router = useRouter()
   const supabase = createClient()
   const { user } = useAuth()
+  const [plan, setPlan] = React.useState<string>('FREE')
+
   React.useEffect(() => {
     async function fetchPlan() {
       if (!user) return
-      await supabase.from('users').select('plan').eq('id', user.id).single()
-      // Plan fetching logic kept for future use
+      const { data } = await supabase.from('users').select('plan').eq('id', user.id).single()
+      if (data?.plan) setPlan(data.plan)
     }
     fetchPlan()
   }, [user, supabase])
@@ -65,9 +69,51 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     ? user.user_metadata.full_name.split(' ').map((n: string) => n[0]).join('').substring(0, 2).toUpperCase()
     : user?.email?.substring(0, 2).toUpperCase() || "U"
 
+  const getPlanBadgeStyles = (plan: string) => {
+    switch (plan) {
+      case 'PREMIUM': 
+        return 'bg-gradient-to-r from-amber-500 to-orange-500 text-white border-0 shadow-sm'
+      case 'PRO': 
+        return 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-0 shadow-sm'
+      default: 
+        return 'bg-muted text-muted-foreground border-muted-foreground/20'
+    }
+  }
+
+  const getPlanLabel = (plan: string) => {
+    switch (plan) {
+      case 'PREMIUM': return 'Premium'
+      case 'PRO': return 'Pro'
+      default: return 'Free'
+    }
+  }
+
   return (
     <Sidebar {...props}>
       <SidebarHeader>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton size="lg" asChild>
+              <a href="/dashboard">
+                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground ring-1 ring-white/10 shadow-[0_0_15px_rgba(255,255,255,0.05)]">
+                  <img src="/logo.png" alt="InboxOS" className="size-5" />
+                </div>
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <div className="flex items-center gap-2">
+                    <span className="truncate font-semibold tracking-tight">InboxOS</span>
+                    <Badge 
+                      variant="outline" 
+                      className={`text-[9px] px-1.5 py-0 h-3.5 font-medium border-0 ${getPlanBadgeStyles(plan)}`}
+                    >
+                      {getPlanLabel(plan)}
+                    </Badge>
+                  </div>
+                  <span className="truncate text-xs text-muted-foreground font-medium">Command Center</span>
+                </div>
+              </a>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
         <InboxSwitcher />
       </SidebarHeader>
       <SidebarContent>
