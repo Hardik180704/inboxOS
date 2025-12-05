@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
@@ -10,26 +10,47 @@ export async function GET() {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Fetch total emails
-    const { count: totalEmails } = await supabase
-      .from('emails')
-      .select('*', { count: 'exact', head: true })
-      .eq('user_id', user.id);
+    const { searchParams } = new URL(request.url)
+    const accountId = searchParams.get('accountId')
 
-    // Fetch newsletters
-    const { count: newsletters } = await supabase
+    // Fetch total emails
+    let totalEmailsQuery = supabase
       .from('emails')
       .select('*', { count: 'exact', head: true })
       .eq('user_id', user.id)
-      .eq('category', 'newsletter');
+    
+    if (accountId) {
+      totalEmailsQuery = totalEmailsQuery.eq('account_id', accountId)
+    }
+
+    const { count: totalEmails } = await totalEmailsQuery
+
+    // Fetch newsletters
+    let newslettersQuery = supabase
+      .from('emails')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', user.id)
+      .eq('category', 'newsletter')
+
+    if (accountId) {
+      newslettersQuery = newslettersQuery.eq('account_id', accountId)
+    }
+
+    const { count: newsletters } = await newslettersQuery
 
     // Fetch recent emails
-    const { data: recentEmails } = await supabase
+    let recentEmailsQuery = supabase
       .from('emails')
       .select('*')
       .eq('user_id', user.id)
       .order('received_at', { ascending: false })
-      .limit(1000);
+      .limit(1000)
+
+    if (accountId) {
+      recentEmailsQuery = recentEmailsQuery.eq('account_id', accountId)
+    }
+
+    const { data: recentEmails } = await recentEmailsQuery
 
     // Mock storage saved (in a real app, calculate based on deleted emails size)
     // For now, let's just return 0 or a random number if we had deleted emails

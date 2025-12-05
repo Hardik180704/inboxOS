@@ -1,0 +1,30 @@
+{
+  "timestamp": "2025-12-05T14:06:06.712Z",
+  "hasCode": true,
+  "action": "connect",
+  "hasSession": true,
+  "hasUser": true,
+  "userId": "fac06208-2dda-4943-b626-98f4715a0908"
+}
+{
+  "timestamp": "2025-12-05T14:08:04.194Z",
+  "hasCode": true,
+  "action": "connect",
+  "hasSession": true,
+  "hasUser": true,
+  "userId": "fac06208-2dda-4943-b626-98f4715a0908"
+}
+Connect error: {"__isAuthError":true,"name":"AuthApiError","status":400,"code":"validation_failed"}
+{
+  "timestamp": "2025-12-05T14:10:05.237Z",
+  "hasCode": true,
+  "action": "connect",
+  "hasSession": true,
+  "hasUser": true,
+  "userId": "fac06208-2dda-4943-b626-98f4715a0908"
+}
+Connect success. Email: hardy2004as@gmail.com
+[saveTokens] Processing hardy2004as@gmail.com for targetUser fac06208-2dda-4943-b626-98f4715a0908. Provider: google
+[saveTokens] User plan: PRO, Limit: 3
+[saveTokens] Current account count: 1
+[saveTokens] Inserting new account

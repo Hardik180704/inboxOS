@@ -40,6 +40,7 @@ import {
 import { createClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/components/providers/auth-provider"
+import { InboxSwitcher } from "@/components/dashboard/inbox-switcher"
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const router = useRouter()
@@ -67,12 +68,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar {...props}>
       <SidebarHeader>
-        <div className="flex items-center gap-2 px-4 py-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg">
-            <img src="/logo.png" alt="InboxOS" className="h-8 w-8 object-contain" />
-          </div>
-          <div className="font-semibold">InboxOS</div>
-        </div>
+        <InboxSwitcher />
       </SidebarHeader>
       <SidebarContent>
         <SidebarMenu>

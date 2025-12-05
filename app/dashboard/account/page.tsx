@@ -7,9 +7,31 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
+import { AccountList } from "@/components/dashboard/account-list"
+
+import { useSearchParams, useRouter } from "next/navigation"
+import { useEffect } from "react"
+import { toast } from "sonner"
 
 export default function AccountPage() {
   const { user } = useAuth()
+  const searchParams = useSearchParams()
+  const router = useRouter()
+
+  useEffect(() => {
+    const connected = searchParams.get('connected')
+    if (connected === 'true') {
+      toast.success("Inbox connected successfully")
+      // Clear param
+      router.replace('/dashboard/account')
+    } else if (connected === 'error') {
+      toast.error("Failed to connect inbox")
+      router.replace('/dashboard/account')
+    } else if (connected === 'limit_reached') {
+      toast.error("Plan limit reached. Upgrade to add more inboxes.")
+      router.replace('/dashboard/account')
+    }
+  }, [searchParams, router])
 
   const userInitials = user?.user_metadata?.full_name
     ? user.user_metadata.full_name.split(' ').map((n: string) => n[0]).join('').substring(0, 2).toUpperCase()
@@ -72,6 +94,8 @@ export default function AccountPage() {
           </div>
         </CardContent>
       </Card>
+
+      <AccountList />
 
       <Card className="border-red-200 dark:border-red-900">
         <CardHeader>
