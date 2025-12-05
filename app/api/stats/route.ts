@@ -29,7 +29,7 @@ export async function GET() {
       .select('*')
       .eq('user_id', user.id)
       .order('received_at', { ascending: false })
-      .limit(50);
+      .limit(1000);
 
     // Mock storage saved (in a real app, calculate based on deleted emails size)
     // For now, let's just return 0 or a random number if we had deleted emails
