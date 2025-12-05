@@ -53,6 +53,8 @@ export class SyncEngine {
         sender_name: email.sender.name,
         sender_address: email.sender.address,
         received_at: email.date.toISOString(),
+        body: email.body,
+        body_html: email.bodyHtml,
         // TODO: Classification
       }));
 

@@ -24,7 +24,7 @@ export class OutlookProvider implements EmailProvider {
     // Select fields to minimize payload
     const response = await this.client.api('/me/messages')
       .top(limit)
-      .select('id,subject,bodyPreview,sender,receivedDateTime,internetMessageHeaders')
+      .select('id,subject,bodyPreview,sender,receivedDateTime,internetMessageHeaders,body')
       .orderby('receivedDateTime DESC')
       .get();
 
@@ -40,6 +40,8 @@ export class OutlookProvider implements EmailProvider {
       },
       date: new Date(msg.receivedDateTime),
       headers: this.parseHeaders(msg.internetMessageHeaders || []),
+      body: msg.body?.content || '', // Outlook returns body in 'content' field
+      bodyHtml: msg.body?.contentType === 'html' ? msg.body.content : '',
     }));
   }
 

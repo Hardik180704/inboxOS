@@ -8,6 +8,15 @@ import { Loader2, RefreshCw, Mail, Calendar } from "lucide-react"
 import { toast } from "sonner"
 import { formatDistanceToNow } from "date-fns"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog"
+import DOMPurify from "isomorphic-dompurify"
+import { useState } from "react"
 
 interface DashboardStats {
   totalEmails: number
@@ -19,6 +28,18 @@ interface DashboardStats {
 export default function DashboardPage() {
   const { user } = useAuth()
   const queryClient = useQueryClient()
+  const [selectedEmailId, setSelectedEmailId] = useState<string | null>(null)
+
+  const { data: selectedEmail, isLoading: isLoadingEmail } = useQuery({
+    queryKey: ['email', selectedEmailId],
+    queryFn: async () => {
+      if (!selectedEmailId) return null
+      const res = await fetch(`/api/emails/${selectedEmailId}`)
+      if (!res.ok) throw new Error('Failed to fetch email')
+      return res.json()
+    },
+    enabled: !!selectedEmailId,
+  })
 
   const { data: stats, isLoading } = useQuery<DashboardStats>({
     queryKey: ['dashboard-stats'],
@@ -122,14 +143,16 @@ export default function DashboardPage() {
         </Button>
       </div>
 
-
-
       <div className="rounded-md border">
         {stats?.recentEmails && stats.recentEmails.length > 0 ? (
           <ScrollArea className="h-[400px]">
             <div className="divide-y">
               {stats.recentEmails.map((email: any) => (
-                <div key={email.id} className="flex items-center justify-between p-4">
+                <div 
+                  key={email.id} 
+                  className="flex items-center justify-between p-4 cursor-pointer hover:bg-muted/50 transition-colors"
+                  onClick={() => setSelectedEmailId(email.id)}
+                >
                   <div className="grid gap-1">
                     <div className="font-medium">{email.subject || '(No Subject)'}</div>
                     <div className="text-sm text-muted-foreground">
@@ -150,6 +173,33 @@ export default function DashboardPage() {
           </div>
         )}
       </div>
+
+      <Dialog open={!!selectedEmailId} onOpenChange={(open) => !open && setSelectedEmailId(null)}>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>{selectedEmail?.subject || '(No Subject)'}</DialogTitle>
+            <DialogDescription>
+              From: {selectedEmail?.sender_name} &lt;{selectedEmail?.sender_address}&gt;
+              <br />
+              Received: {selectedEmail?.received_at && new Date(selectedEmail.received_at).toLocaleString()}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="mt-4">
+            {isLoadingEmail ? (
+              <div className="flex justify-center py-8">
+                <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+              </div>
+            ) : (
+              <div 
+                className="prose dark:prose-invert max-w-none text-sm"
+                dangerouslySetInnerHTML={{ 
+                  __html: DOMPurify.sanitize(selectedEmail?.body_html || selectedEmail?.body || 'No content') 
+                }} 
+              />
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

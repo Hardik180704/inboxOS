@@ -46,14 +46,33 @@ export class GmailProvider implements EmailProvider {
           const detail = await this.gmail.users.messages.get({
             userId: 'me',
             id: msg.id,
-            format: 'metadata',
-            metadataHeaders: ['Subject', 'From', 'Date', 'List-Unsubscribe'],
+            format: 'full', // Changed from 'metadata' to 'full' to get body
           });
 
           const headers: Record<string, string> = {};
           detail.data.payload?.headers?.forEach((h: { name: string; value: string }) => {
             headers[h.name] = h.value;
           });
+
+          let body = '';
+          let bodyHtml = '';
+
+          const getBody = (payload: any) => {
+            if (payload.body?.data) {
+              // Fix URL-safe base64
+              const encoded = payload.body.data.replace(/-/g, '+').replace(/_/g, '/');
+              const decoded = Buffer.from(encoded, 'base64').toString('utf-8');
+              if (payload.mimeType === 'text/plain') body = decoded;
+              if (payload.mimeType === 'text/html') bodyHtml = decoded;
+            }
+            if (payload.parts) {
+              payload.parts.forEach((part: any) => getBody(part));
+            }
+          };
+
+          if (detail.data.payload) {
+            getBody(detail.data.payload);
+          }
 
           return {
             id: msg.id,
@@ -62,6 +81,8 @@ export class GmailProvider implements EmailProvider {
             sender: this.parseSender(headers['From'] || ''),
             date: new Date(headers['Date'] || Date.now()),
             headers: headers,
+            body: body || bodyHtml, // Fallback to HTML if plain text missing
+            bodyHtml: bodyHtml || body, // Fallback to plain text if HTML missing
           };
         } catch (error) {
           console.error(`Failed to fetch email ${msg.id}:`, error);

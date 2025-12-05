@@ -8,6 +8,8 @@ export interface Email {
   };
   date: Date;
   headers: Record<string, string>;
+  body?: string;
+  bodyHtml?: string;
 }
 
 export interface FetchOptions {
