@@ -2,14 +2,13 @@
 
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
 import { Loader2, ArrowLeft, CheckCircle2 } from "lucide-react";
 
 export default function LoginPage() {
   const supabase = createClient();
-  const router = useRouter();
+
   const [isLoading, setIsLoading] = useState<string | null>(null);
 
   const handleLogin = async (provider: 'google' | 'azure') => {

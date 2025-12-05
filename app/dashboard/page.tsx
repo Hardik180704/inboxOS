@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useAuth } from "@/components/providers/auth-provider"
 
 export default function DashboardPage() {
-  const { user } = useAuth()
+  const { } = useAuth()
 
   return (
     <div className="space-y-4">

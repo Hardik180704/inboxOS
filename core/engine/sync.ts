@@ -3,9 +3,13 @@ import { GmailProvider } from '../providers/gmail';
 import { OutlookProvider } from '../providers/outlook';
 import { decrypt } from '@/lib/encryption';
 
+import { SupabaseClient } from '@supabase/supabase-js';
+
 export class SyncEngine {
+  constructor(private client?: SupabaseClient) {}
+
   async syncAccount(accountId: string) {
-    const supabase = await createClient();
+    const supabase = this.client || await createClient();
     const { data: account } = await supabase
       .from('email_accounts')
       .select('*')

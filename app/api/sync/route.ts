@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
+  const { _accountId } = await request.json()
+
   try {
-    const { accountId } = await request.json();
     // TODO: Implement sync logic
-    return NextResponse.json({ success: true, message: 'Sync started' });
-  } catch (error) {
-    return NextResponse.json({ success: false, error: 'Sync failed' }, { status: 500 });
+    return NextResponse.json({ success: true })
+  } catch (_error) {
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
   }
 }

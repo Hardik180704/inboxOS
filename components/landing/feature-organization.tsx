@@ -10,7 +10,7 @@ export function FeatureOrganization() {
             Never miss an important email again.
           </h2>
           <p className="max-w-[700px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
-            Drowning in emails? Don't waste energy trying to prioritize your emails. Our AI assistant will label everything automatically.
+            Drowning in emails? Don&apos;t waste energy trying to prioritize your emails. Our AI assistant will label everything automatically.
           </p>
         </div>
         

@@ -45,13 +45,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const router = useRouter()
   const supabase = createClient()
   const { user } = useAuth()
-  const [plan, setPlan] = React.useState("FREE")
-
   React.useEffect(() => {
     async function fetchPlan() {
       if (!user) return
-      const { data } = await supabase.from('users').select('plan').eq('id', user.id).single()
-      if (data?.plan) setPlan(data.plan)
+      await supabase.from('users').select('plan').eq('id', user.id).single()
+      // Plan fetching logic kept for future use
     }
     fetchPlan()
   }, [user, supabase])

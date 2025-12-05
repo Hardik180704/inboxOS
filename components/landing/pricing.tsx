@@ -5,8 +5,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { Check, X, Minus, Zap, Shield, Sparkles, Inbox, ArrowRight } from "lucide-react";
+import { Check, Minus, Zap, Shield, Sparkles, Inbox, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function Pricing() {
@@ -265,7 +264,7 @@ export function Pricing() {
           <div className="text-center mb-16">
             <h3 className="text-3xl font-bold mb-4">Why choose InboxOS over generic cleaners?</h3>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              We don't just delete emails. We build an intelligent operating system for your communications.
+              We don&apos;t just delete emails. We build an intelligent operating system for your communications.
             </p>
           </div>
           

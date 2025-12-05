@@ -46,7 +46,7 @@ export class GmailProvider implements EmailProvider {
       });
 
       const headers: Record<string, string> = {};
-      detail.data.payload?.headers?.forEach((h: any) => {
+      detail.data.payload?.headers?.forEach((h: { name: string; value: string }) => {
         headers[h.name] = h.value;
       });
 
@@ -70,7 +70,7 @@ export class GmailProvider implements EmailProvider {
       format: 'metadata',
     });
     const headers: Record<string, string> = {};
-    detail.data.payload?.headers?.forEach((h: any) => {
+    detail.data.payload?.headers?.forEach((h: { name: string; value: string }) => {
       headers[h.name] = h.value;
     });
     return headers;

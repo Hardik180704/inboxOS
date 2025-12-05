@@ -3,20 +3,26 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Check } from "lucide-react"
-import { useState, useEffect } from "react"
 import { toast } from "sonner"
-import { PLANS, PRICES } from "@/lib/paddle"
 import { useAuth } from "@/components/providers/auth-provider"
+import { useEffect, useState } from "react"
 import { initializePaddle, Paddle } from '@paddle/paddle-js';
 
+
+
+const PRICES = {
+  PRO_MONTHLY: "pri_01hry02222222222222222222", // Replace with your actual price ID
+  PREMIUM_MONTHLY: "pri_01hry02222222222222222222", // Replace with your actual price ID
+}
+
 export function PricingPage() {
+  const { } = useAuth()
   const [loading, setLoading] = useState(false)
   const [paddle, setPaddle] = useState<Paddle>()
-  const { user } = useAuth()
 
   useEffect(() => {
-    initializePaddle({ 
-      environment: 'sandbox', 
+    initializePaddle({
+      environment: 'sandbox',
       token: 'test_865c36353245453453453453453' // Replace with your actual client-side token
     }).then((paddleInstance: Paddle | undefined) => {
       if (paddleInstance) {
@@ -50,7 +56,7 @@ export function PricingPage() {
             successUrl: `${window.location.origin}/dashboard?success=true`,
         }
       });
-    } catch (error) {
+    } catch (_error) {
       toast.error("Something went wrong")
     } finally {
       setLoading(false)

@@ -20,7 +20,7 @@ export async function POST(request: Request) {
 
   try {
     if (process.env.NODE_ENV !== 'development') { // Skip verification in local dev if needed, or use a tool to forward
-       const eventData = paddle.webhooks.unmarshal(body, process.env.PADDLE_WEBHOOK_SECRET!, signature);
+       const _eventData = paddle.webhooks.unmarshal(body, process.env.PADDLE_WEBHOOK_SECRET!, signature);
        // If unmarshal succeeds, it's valid.
     }
     
