@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card } from "@/components/ui/card"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { Loader2, Trash2, Plus, Zap } from "lucide-react"
 import { toast } from "sonner"
@@ -195,7 +195,7 @@ export default function RulesPage() {
                 </div>
                 <div className="text-sm text-muted-foreground flex items-center gap-2">
                    <Zap className="h-3 w-3" />
-                   If <strong>{rule.type}</strong> contains <strong>"{rule.value}"</strong>
+                   If <strong>{rule.type}</strong> contains <strong>&quot;{rule.value}&quot;</strong>
                 </div>
               </div>
               <Button 

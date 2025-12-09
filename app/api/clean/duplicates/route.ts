@@ -4,7 +4,7 @@ import { decrypt } from '@/lib/encryption'
 import { GmailProvider } from '@/core/providers/gmail'
 import { OutlookProvider } from '@/core/providers/outlook'
 
-export async function GET(request: Request) {
+export async function GET() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
