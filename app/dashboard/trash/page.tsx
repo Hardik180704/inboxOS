@@ -30,7 +30,7 @@ export default function TrashPage() {
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Trash</h1>
         <p className="text-muted-foreground">
-          View items currently in your provider's Trash folder.
+          View items currently in your provider&apos;s Trash folder.
         </p>
       </div>
 
@@ -38,7 +38,7 @@ export default function TrashPage() {
           <CardHeader>
             <CardTitle>Trash Bin</CardTitle>
             <CardDescription>
-                Items in trash are automatically deleted after 30 days. Don&apos;t use this for long-term storage.rmanent deletion policy (usually 30 days).
+                Items in trash are automatically deleted after 30 days. Don&apos;t use this for long-term storage.
             </CardDescription>
           </CardHeader>
           <CardContent>

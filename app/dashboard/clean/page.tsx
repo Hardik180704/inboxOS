@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card } from "@/components/ui/card"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { Loader2, Copy, Sparkles } from "lucide-react"
 import { toast } from "sonner"
@@ -82,7 +82,7 @@ export default function CleanPage() {
         <Sparkles className="h-4 w-4" />
         <AlertTitle>How it works</AlertTitle>
         <AlertDescription>
-          We find emails with matching subject, sender, and time (within 1 min). "Clean All" keeps the newest copy and deletes the rest.
+          We find emails with matching subject, sender, and time (within 1 min). &quot;Clean All&quot; keeps the newest copy and deletes the rest.
         </AlertDescription>
       </Alert>
 

@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
-import { startOfDay, subDays, format } from 'date-fns'
+import { subDays, format } from 'date-fns'
 
-export async function GET(request: Request) {
+export async function GET() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
