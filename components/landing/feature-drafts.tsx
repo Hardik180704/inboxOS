@@ -17,7 +17,7 @@ export function FeatureDrafts() {
           <img 
             src="/drafts_feature.png" 
             alt="AI Drafts Integration" 
-            className="w-full h-auto rounded-xl shadow-lg"
+            className="w-full h-auto rounded-xl shadow-lg dark:brightness-[0.85] dark:border dark:border-white/10"
           />
         </div>
       </div>

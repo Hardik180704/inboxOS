@@ -110,7 +110,7 @@ export class GmailProvider implements EmailProvider {
 
           const headers: Record<string, string> = {};
           detail.data.payload?.headers?.forEach((h: { name: string; value: string }) => {
-            headers[h.name] = h.value;
+            headers[h.name.toLowerCase()] = h.value;
           });
 
           let body = '';
@@ -134,13 +134,15 @@ export class GmailProvider implements EmailProvider {
 
           return {
             id: msg.id,
-            subject: headers['Subject'] || '(No Subject)',
+            subject: headers['subject'] || '(No Subject)',
             snippet: detail.data.snippet || '',
-            sender: this.parseSender(headers['From'] || ''),
-            date: new Date(headers['Date'] || Date.now()),
+            sender: this.parseSender(headers['from'] || ''),
+            date: new Date(headers['date'] || Date.now()),
             headers: headers,
             body: body || bodyHtml,
             bodyHtml: bodyHtml || body,
+            sizeEstimate: detail.data.sizeEstimate || 0,
+            hasAttachments: this.checkForAttachments(detail.data.payload),
           };
         } catch (error) {
           console.error(`Failed to fetch email ${msg.id}:`, error);
@@ -180,6 +182,7 @@ export class GmailProvider implements EmailProvider {
   }
 
   async delete(remoteIds: string[]): Promise<void> {
+    if (!remoteIds || remoteIds.length === 0) return;
     await this.gmail.users.messages.batchDelete({
       userId: 'me',
       requestBody: {
@@ -202,5 +205,20 @@ export class GmailProvider implements EmailProvider {
       return { name: match[1].trim().replace(/^"|"$/g, ''), address: match[2].trim() };
     }
     return { name: '', address: from.trim() };
+  }
+
+  private checkForAttachments(payload: any): boolean {
+    if (!payload) return false;
+    
+    // Check if filename is present and not empty in parts
+    if (payload.filename && payload.filename.length > 0) return true;
+
+    if (payload.parts) {
+      for (const part of payload.parts) {
+        if (this.checkForAttachments(part)) return true;
+      }
+    }
+    
+    return false;
   }
 }

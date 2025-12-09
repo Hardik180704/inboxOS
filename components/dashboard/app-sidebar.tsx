@@ -3,14 +3,18 @@
 import * as React from "react"
 import {
   Inbox,
+  Mail,
+  HardDrive,
+  BarChart,
+  Sparkles,
   Settings,
   Trash2,
   LogOut,
-  Sparkles,
   ChevronsUpDown,
   BadgeCheck,
   CreditCard,
   Bell,
+  Zap,
 } from "lucide-react"
 
 import {
@@ -38,7 +42,7 @@ import {
   AvatarImage,
 } from "@/components/ui/avatar"
 import { createClient } from "@/lib/supabase/client"
-import { useRouter } from "next/navigation"
+import { useRouter, usePathname } from "next/navigation"
 import { useAuth } from "@/components/providers/auth-provider"
 import { InboxSwitcher } from "@/components/dashboard/inbox-switcher"
 
@@ -46,6 +50,7 @@ import { Badge } from "@/components/ui/badge"
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const router = useRouter()
+  const pathname = usePathname()
   const supabase = createClient()
   const { user } = useAuth()
   const [plan, setPlan] = React.useState<string>('FREE')
@@ -119,7 +124,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild isActive>
+            <SidebarMenuButton asChild isActive={pathname === '/dashboard'}>
               <a href="/dashboard">
                 <Inbox />
                 <span>Inbox</span>
@@ -127,7 +132,47 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild>
+            <SidebarMenuButton asChild isActive={pathname === '/dashboard/newsletters'}>
+              <a href="/dashboard/newsletters">
+                <Mail />
+                <span>Newsletters</span>
+              </a>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild isActive={pathname === '/dashboard/storage'}>
+              <a href="/dashboard/storage">
+                <HardDrive />
+                <span>Storage</span>
+              </a>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild isActive={pathname === '/dashboard/analytics'}>
+              <a href="/dashboard/analytics">
+                <BarChart />
+                <span>Analytics</span>
+              </a>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild isActive={pathname === '/dashboard/clean'}>
+              <a href="/dashboard/clean">
+                <Sparkles />
+                <span>Deep Clean</span>
+              </a>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild isActive={pathname === '/dashboard/rules'}>
+              <a href="/dashboard/rules">
+                <Zap />
+                <span>Rules</span>
+              </a>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild isActive={pathname === '/dashboard/trash'}>
               <a href="/dashboard/trash">
                 <Trash2 />
                 <span>Trash</span>
@@ -135,7 +180,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild>
+            <SidebarMenuButton asChild isActive={pathname?.startsWith('/dashboard/settings')}>
               <a href="/dashboard/settings">
                 <Settings />
                 <span>Settings</span>
@@ -152,6 +197,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <SidebarMenuButton
                   size="lg"
                   className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                  suppressHydrationWarning
                 >
                   <Avatar className="h-8 w-8 rounded-lg">
                     <AvatarImage src={user?.user_metadata?.avatar_url} alt={user?.user_metadata?.full_name || user?.email} />
@@ -183,12 +229,19 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                  <DropdownMenuItem>
-                    <Sparkles className="mr-2 h-4 w-4 text-yellow-500" />
-                    Upgrade to Pro
-                  </DropdownMenuItem>
-                </DropdownMenuGroup>
+                {plan === 'FREE' && (
+                  <>
+                    <DropdownMenuGroup>
+                      <DropdownMenuItem asChild>
+                         <a href="/pricing">
+                           <Sparkles className="mr-2 h-4 w-4 text-yellow-500" />
+                           Upgrade to Pro
+                         </a>
+                      </DropdownMenuItem>
+                    </DropdownMenuGroup>
+                    <DropdownMenuSeparator />
+                  </>
+                )}
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
                   <DropdownMenuItem asChild>
