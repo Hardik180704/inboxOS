@@ -18,7 +18,7 @@ export function FeatureOrganization() {
           <img 
             src="/organization_before_after.png" 
             alt="Inbox Organization Before and After" 
-            className="w-full h-auto rounded-xl shadow-lg"
+            className="w-full h-auto rounded-xl shadow-lg dark:brightness-[0.85] dark:border dark:border-white/10"
           />
         </div>
       </div>

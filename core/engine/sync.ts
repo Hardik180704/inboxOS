@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server';
 import { GmailProvider } from '../providers/gmail';
 import { OutlookProvider } from '../providers/outlook';
 import { decrypt } from '@/lib/encryption';
+import { classifyEmail } from '../intelligence/classifier';
 
 import { SupabaseClient } from '@supabase/supabase-js';
 
@@ -49,6 +50,14 @@ export class SyncEngine {
         throw new Error('Provider not supported');
       }
 
+      // Fetch active rules
+      const { data: rules } = await supabase
+        .from('rules')
+        .select('*')
+        .eq('user_id', account.user_id);
+
+      log(`Fetched ${rules?.length || 0} rules`);
+
       const limit = user?.plan === 'FREE' ? 500 : 1000;
       log(`Connecting to provider...`);
       await provider.connect();
@@ -66,19 +75,51 @@ export class SyncEngine {
       // Save to DB in batches
       const BATCH_SIZE = 100;
       for (let i = 0; i < emails.length; i += BATCH_SIZE) {
-        const batch = emails.slice(i, i + BATCH_SIZE).map(email => ({
-          account_id: accountId,
-          user_id: account.user_id,
-          remote_id: email.id,
-          subject: email.subject,
-          snippet: email.snippet,
-          sender_name: email.sender.name,
-          sender_address: email.sender.address,
-          received_at: email.date.toISOString(),
-          body: email.body,
-          body_html: email.bodyHtml,
-          // TODO: Classification
-        }));
+        const batch = emails.slice(i, i + BATCH_SIZE).map(email => {
+          // Apply rules
+          let isArchived = false;
+          if (rules) {
+             for (const rule of rules) {
+                 const value = rule.value.toLowerCase();
+                 if (rule.action === 'archive') { // currently only action supported
+                     if (rule.type === 'sender' && email.sender.address.toLowerCase().includes(value)) isArchived = true;
+                     else if (rule.type === 'domain' && email.sender.address.toLowerCase().endsWith(value)) isArchived = true;
+                     else if (rule.type === 'subject' && email.subject?.toLowerCase().includes(value)) isArchived = true;
+                 }
+             }
+          }
+
+          // Smart Classification
+          const category = classifyEmail({
+            sender: email.sender,
+            subject: email.subject,
+            snippet: email.snippet,
+            headers: email.headers
+          });
+
+          return {
+            account_id: accountId,
+            user_id: account.user_id,
+            remote_id: email.id,
+            subject: email.subject,
+            snippet: email.snippet,
+            sender_name: email.sender.name,
+            sender_address: email.sender.address,
+            received_at: email.date.toISOString(),
+            body: email.body,
+            body_html: email.bodyHtml,
+            metadata: {
+              list_unsubscribe: email.headers['list-unsubscribe'],
+              list_unsubscribe_post: email.headers['list-unsubscribe-post'],
+              references: email.headers['references'],
+              in_reply_to: email.headers['in-reply-to'],
+            },
+            has_attachments: email.hasAttachments,
+            size_estimate: email.sizeEstimate,
+            is_archived: isArchived,
+            category: category, 
+          };
+        });
 
         const { error } = await supabase.from('emails').upsert(batch, { 
           onConflict: 'account_id, remote_id' 

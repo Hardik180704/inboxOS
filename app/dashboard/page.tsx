@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useAuth } from "@/components/providers/auth-provider"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { useSearchParams } from "next/navigation"
-import { Loader2, RefreshCw, Mail, Calendar } from "lucide-react"
+import { Loader2, RefreshCw, Mail, Calendar, Glasses } from "lucide-react"
 import { toast } from "sonner"
 import { formatDistanceToNow } from "date-fns"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -18,6 +18,21 @@ import {
 } from "@/components/ui/dialog"
 import DOMPurify from "isomorphic-dompurify"
 import { useState } from "react"
+import { FocusToggle } from "@/components/dashboard/focus-toggle"
+import { useLocalStorage } from "@/hooks/use-local-storage"
+import { Badge } from "@/components/ui/badge"
+
+function getCategoryColor(category?: string) {
+  switch (category) {
+    case 'finance': return 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800'
+    case 'travel': return 'bg-sky-500/15 text-sky-700 dark:text-sky-400 border-sky-200 dark:border-sky-800'
+    case 'social': return 'bg-blue-500/15 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-800'
+    case 'updates': return 'bg-orange-500/15 text-orange-700 dark:text-orange-400 border-orange-200 dark:border-orange-800'
+    case 'promotions': return 'bg-pink-500/15 text-pink-700 dark:text-pink-400 border-pink-200 dark:border-pink-800'
+    case 'primary': return 'bg-indigo-500/15 text-indigo-700 dark:text-indigo-400 border-indigo-200 dark:border-indigo-800'
+    default: return 'bg-gray-500/15 text-gray-700 dark:text-gray-400 border-gray-200 dark:border-gray-800'
+  }
+}
 
 interface DashboardStats {
   totalEmails: number
@@ -32,6 +47,7 @@ function DashboardPageContent() {
   const { user } = useAuth()
   const queryClient = useQueryClient()
   const [selectedEmailId, setSelectedEmailId] = useState<string | null>(null)
+  const [isFocusMode, setIsFocusMode] = useLocalStorage('focus-mode', false)
 
   const { data: selectedEmail, isLoading: isLoadingEmail } = useQuery({
     queryKey: ['email', selectedEmailId],
@@ -91,9 +107,17 @@ function DashboardPageContent() {
     )
   }
 
+
+
+  const dashboardEmails = stats?.recentEmails || []
+  const filteredEmails = isFocusMode
+    ? dashboardEmails.filter((email: any) => !email.metadata?.list_unsubscribe)
+    : dashboardEmails
+
   return (
     <div className="space-y-6">
       <div className="grid gap-4 md:grid-cols-3">
+        {/* Statistics Cards - Unchanged */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Emails</CardTitle>
@@ -132,11 +156,15 @@ function DashboardPageContent() {
         </Card>
       </div>
       
-      <div className="flex justify-between items-center">
-        <h2 className="text-lg font-semibold">Recent Activity</h2>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-start">
+           <h2 className="text-lg font-semibold">Your Mails</h2>
+           <FocusToggle isFocusMode={isFocusMode} onToggle={setIsFocusMode} />
+        </div>
         <Button 
           onClick={() => syncMutation.mutate()} 
           disabled={syncMutation.isPending}
+          className="w-full sm:w-auto"
         >
           {syncMutation.isPending ? (
             <>
@@ -153,22 +181,29 @@ function DashboardPageContent() {
       </div>
 
       <div className="rounded-md border">
-        {stats?.recentEmails && stats.recentEmails.length > 0 ? (
+        {filteredEmails.length > 0 ? (
           <ScrollArea className="h-[400px]">
             <div className="divide-y">
-              {stats.recentEmails.map((email: any) => (
+              {filteredEmails.map((email: any) => (
                 <div 
                   key={email.id} 
-                  className="flex items-center justify-between p-4 cursor-pointer hover:bg-muted/50 transition-colors"
+                  className="flex flex-col sm:flex-row sm:items-center justify-between p-4 cursor-pointer hover:bg-muted/50 transition-colors gap-2"
                   onClick={() => setSelectedEmailId(email.id)}
                 >
-                  <div className="grid gap-1">
-                    <div className="font-medium">{email.subject || '(No Subject)'}</div>
-                    <div className="text-sm text-muted-foreground">
+                  <div className="grid gap-1 min-w-0 flex-1">
+                    <div className="font-medium flex items-center gap-2 flex-wrap">
+                       <span className="truncate">{email.subject || '(No Subject)'}</span>
+                       {email.category && (
+                         <Badge variant="outline" className={`shrink-0 ${getCategoryColor(email.category)}`}>
+                           {email.category}
+                         </Badge>
+                       )}
+                    </div>
+                    <div className="text-sm text-muted-foreground truncate">
                       {email.sender_name || email.sender_address}
                     </div>
                   </div>
-                  <div className="flex items-center text-sm text-muted-foreground">
+                  <div className="flex items-center text-sm text-muted-foreground shrink-0">
                     <Calendar className="mr-2 h-4 w-4" />
                     {formatDistanceToNow(new Date(email.received_at), { addSuffix: true })}
                   </div>
@@ -178,7 +213,14 @@ function DashboardPageContent() {
           </ScrollArea>
         ) : (
           <div className="p-8 text-center text-muted-foreground">
-            No emails found. Connect an account and sync to get started.
+            {isFocusMode ? (
+               <>
+                 <Glasses className="mx-auto h-8 w-8 text-indigo-500 mb-2" />
+                 <p>Focus Mode On. No important personal emails found.</p>
+               </>
+            ) : (
+               <p>No emails found. Connect an account and sync to get started.</p>
+            )}
           </div>
         )}
       </div>

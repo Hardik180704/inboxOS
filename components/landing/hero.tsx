@@ -48,7 +48,7 @@ export function Hero() {
             <img 
               src="/dashboard_mockup.png" 
               alt="InboxOS Dashboard" 
-              className="w-full h-auto"
+              className="w-full h-auto dark:brightness-[0.85] dark:border-white/10"
             />
           </div>
         </div>

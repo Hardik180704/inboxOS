@@ -7,27 +7,47 @@ import { Pricing } from "@/components/landing/pricing";
 import { FAQ } from "@/components/landing/faq";
 import { Footer } from "@/components/landing/footer";
 
+import { ScrollAnimation } from "@/components/landing/scroll-animation";
+
 export default function LandingPage() {
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar />
       <main className="flex-1">
-        <Hero />
+        <ScrollAnimation direction="none">
+           <Hero />
+        </ScrollAnimation>
+        
         <section id="how-it-works">
-          <FeatureTicker />
+          <ScrollAnimation delay={0.2}>
+            <FeatureTicker />
+          </ScrollAnimation>
         </section>
-        <section id="features">
-          <FeatureOrganization />
-          <FeatureDrafts />
+
+        <section id="features" className="space-y-12 py-12">
+          <ScrollAnimation direction="left">
+            <FeatureOrganization />
+          </ScrollAnimation>
+          <ScrollAnimation direction="right">
+             <FeatureDrafts />
+          </ScrollAnimation>
         </section>
+
         <section id="pricing">
-          <Pricing />
+          <ScrollAnimation>
+            <Pricing />
+          </ScrollAnimation>
         </section>
+
         <section id="faq">
-          <FAQ />
+           <ScrollAnimation delay={0.1}>
+            <FAQ />
+           </ScrollAnimation>
         </section>
       </main>
-      <Footer />
+      <ScrollAnimation direction="none">
+        <Footer />
+      </ScrollAnimation>
     </div>
   );
 }

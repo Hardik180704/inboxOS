@@ -10,6 +10,8 @@ export interface Email {
   headers: Record<string, string>;
   body?: string;
   bodyHtml?: string;
+  sizeEstimate?: number;
+  hasAttachments?: boolean;
 }
 
 export interface FetchOptions {
