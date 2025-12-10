@@ -30,7 +30,7 @@ export async function GET(request: Request) {
       .from('emails')
       .select('*', { count: 'exact', head: true })
       .eq('user_id', user.id)
-      .eq('category', 'newsletter')
+      .eq('category', 'updates')
 
     if (accountId) {
       newslettersQuery = newslettersQuery.eq('account_id', accountId)
