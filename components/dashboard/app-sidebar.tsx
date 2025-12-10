@@ -12,7 +12,6 @@ import {
   LogOut,
   ChevronsUpDown,
   BadgeCheck,
-  CreditCard,
   Bell,
   Zap,
 } from "lucide-react"
@@ -229,31 +228,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                {plan === 'FREE' && (
-                  <>
-                    <DropdownMenuGroup>
-                      <DropdownMenuItem asChild>
-                         <a href="/pricing">
-                           <Sparkles className="mr-2 h-4 w-4 text-yellow-500" />
-                           Upgrade to Pro
-                         </a>
-                      </DropdownMenuItem>
-                    </DropdownMenuGroup>
-                    <DropdownMenuSeparator />
-                  </>
-                )}
-                <DropdownMenuSeparator />
                 <DropdownMenuGroup>
                   <DropdownMenuItem asChild>
                     <a href="/dashboard/account">
                       <BadgeCheck className="mr-2 h-4 w-4" />
                       Account
-                    </a>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <a href="/dashboard/billing">
-                      <CreditCard className="mr-2 h-4 w-4" />
-                      Billing
                     </a>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
